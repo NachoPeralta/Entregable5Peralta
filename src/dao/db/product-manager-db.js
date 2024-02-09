@@ -1,11 +1,11 @@
 const ProductModel = require("../../models/products.model.js");
 
 class ProductManager {
-    
+
     async addProduct(newProduct) {
         let { title, description, code, price, status, stock, category, thumbnail } = newProduct;
 
-        if (!title || !description || !code || !price || !status || !stock || !category) {
+        if (!title || !description || !code || !price || !stock || !category) {
             console.log("Los datos no pueden estar vacios");
             return;
         }
@@ -59,7 +59,7 @@ class ProductManager {
 
     async updateProduct(id, newData) {
         try {
-            const updatedProduct = await ProductModel.findByIdAndUpdate(id, newData, {new: true});
+            const updatedProduct = await ProductModel.findByIdAndUpdate(id, newData, { new: true });
 
             if (!updatedProduct) {
                 console.log("Producto no encontrado");

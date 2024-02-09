@@ -13,13 +13,13 @@ router.get("/", async (req, res) => {
         const products = await productManager.getProducts();
 
         if (limit) {
-            res.send({ status: "success", product: products.slice(0, limit) });
+            res.status(200).send({ status: "success", product: products.slice(0, limit) });
         } else {
-            res.send({ status: "success", product: products });
+            res.status(200).send({ status: "success", product: products });
         }
     } catch (error) {
         console.log("Error al traer los productos", error);
-        res.send({ status: "error", error: "Error al traer los productos" });
+        res.status(401).send({ status: "error", error: "Error al traer los productos" });
     }
 
 })
@@ -29,7 +29,9 @@ router.get("/:pid", async (req, res) => {
     const product = await productManager.getProductById(req.params.pid);
 
     if (product) {
-        res.send({ status: "Success", product: product });
+        res.status(200).send({ status: "Success", product: product });
+    } else {
+        res.status(404).send({message: "Product not found"})
     }
 })
 
@@ -42,13 +44,13 @@ router.post("/", async (req, res) => {
 
         const newProduct = await productManager.addProduct(product);
         if (!newProduct) {
-            res.send({ status: "Error", error: "No se pudo agregar el producto, verifique los datos ingresados" });
+            res.status(401).send({ status: "Error", error: "No se pudo agregar el producto, verifique los datos ingresados" });
             return;
         }
-        res.send({ status: "Success", product: { newProduct } });
+        res.status(200).send({ status: "Success", product: { newProduct } });
 
     } catch (error) {
-        res.send({ status: "Error", error: "No se pudo agregar el producto" });
+        res.status(401).send({ status: "Error", error: "No se pudo agregar el producto" });
         console.log(error);
         return;
     }
@@ -61,13 +63,13 @@ router.put("/:pid", async (req, res) => {
         const product = req.body;
         const updatedProduct = await productManager.updateProduct(req.params.pid, product);
         if (!updatedProduct) {
-            res.send({ status: "Error", error: "Producto no encontrado" });
+            res.status(404).send({ status: "Error", error: "Producto no encontrado" });
             return;
         }
-        res.send({ status: "Success", product: { updatedProduct } });
+        res.status(200).send({ status: "Success", product: { updatedProduct } });
 
     } catch (error) {
-        res.send({ status: "Error", error: "No se pudo actualizar el producto" });
+        res.status(401).send({ status: "Error", error: "No se pudo actualizar el producto" });
         console.log(error);
         return;
     }
@@ -78,12 +80,12 @@ router.delete("/:pid", async (req, res) => {
     try {
         const products = await productManager.deleteProduct(req.params.pid);
         if (!products) {
-            res.send({ status: "Error", error: "Producto no encontrado" });
+            res.status(404).send({ status: "Error", error: "Producto no encontrado" });
             return;
         }
-        res.send({ status: "Success", products: products });
+        res.status(200).send({ status: "Success", products: products });
     } catch (error) {
-        res.send({ status: "Error", error: "No se pudo eliminar el producto" });
+        res.status(401).send({ status: "Error", error: "No se pudo eliminar el producto" });
         console.log(error);
         return;
     }
